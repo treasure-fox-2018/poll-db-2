@@ -12,7 +12,14 @@ class Show {
   }
 
   static case2(){
-    let query = ``;
+    let query = `SELECT newTable.totalVotes, newTable.name, Voters.first_name || " " || Voters.last_name AS voterName, Voters.gender FROM Votes, (SELECT COUNT (*) AS 'totalVotes', Politicians.name, Politicians.id
+    FROM Politicians
+    INNER JOIN Votes ON Politicians.id = Votes.politician_id 
+    GROUP BY Politicians.name
+    ORDER BY totalVotes DESC
+    LIMIT 3) AS newTable
+            INNER JOIN Voters ON Votes.voter_id = Voters.id
+            WHERE Votes.politician_id = newTable.id`;
 
     db.all(query, (err, result) => {
       console.log(result);
@@ -28,4 +35,6 @@ class Show {
   }
 }
 
-Show.case3()
+Show.case2()
+
+
