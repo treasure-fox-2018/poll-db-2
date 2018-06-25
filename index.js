@@ -16,17 +16,18 @@ db.all(query1, (err, data) => {
 
 
 // NO 2
-let query2 = `
-SELECT tmp_politicians.totalVote, tmp_politicians.name AS politicianName,
-(voters.first_name||" " ||voters.last_name) AS voterName, voters.gender
-FROM (SELECT politicians.id, COUNT(*) as totalVote, politicians.name
-FROM votes
-JOIN politicians ON votes.id_politicians = politicians.id
-GROUP BY politicians.name
-ORDER BY totalVote DESC
+let query2 =
+  `SELECT tmp_politicians.totalVote, tmp_politicians.name AS politicianName, 
+  (voters.first_name||" " ||voters.last_name) AS voterName, voters.gender
+FROM (
+ SELECT politicians.id, COUNT(*) as totalVote, politicians.name
+  FROM votes
+  JOIN politicians ON votes.id_politicians = politicians.id
+  GROUP BY politicians.name
+  ORDER BY totalVote DESC
 ) AS tmp_politicians
 LEFT JOIN votes ON tmp_politicians.id= votes.id_politicians
-LEFT JOIN voters ON votes.id_voters = voters`
+LEFT JOIN voters ON votes.id_voters = voters.id`
 
 
 db.all(query2, (err, data) => {
