@@ -9,6 +9,8 @@ function anchor1(){
                  WHERE grade_current < 9
                  GROUP BY name
                  ORDER BY grade_current ;`
+
+                 
     
     db.all(query,function(err,data){
         if(err) throw err
@@ -17,16 +19,16 @@ function anchor1(){
 }
 
 function anchor2(){
-    let query = `SELECT totalVote, dataJoin.politicianName, first_name||' '||last_name AS voterName, gender FROM votes, 
-                 (SELECT COUNT(*) AS totalVote, politicians.name AS politicianName, politicians.id AS politicianID  
+    let query = `SELECT totalVote, dataJoin.name, first_name||' '||last_name 
+                 AS name, gender FROM votes,(SELECT COUNT(*) AS totalVote, politicians.name AS name, politicians.id AS idPolitician 
                  FROM politicians    
-                 JOIN votes ON politicians.id = votes.politicianID
-                 JOIN voters ON votes.voterID = voters.id
+                 JOIN votes ON politicians.id = votes.idPolitician
+                JOIN voters ON votes.idVoter = voters.id
                  GROUP BY name
                  ORDER BY totalVote DESC
                  LIMIT 3) AS dataJoin
-                 JOIN voters ON voters.id = votes.voterID 
-                 WHERE votes.politicianID = dataJoin.politicianID;`
+                 JOIN voters ON voters.id = votes.idVoter 
+                 WHERE votes.idPolitician = dataJoin.idPolitician;`
 
     
     db.all(query,function(err,data){
